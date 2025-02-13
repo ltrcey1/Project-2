@@ -12,7 +12,7 @@ import Geometry_Operations as geom
 
 # Determine the unknown bars next to this node
 def UnknownBars(node):
-    bars_to_node = node.bar
+    bars_to_node = node.bars
     my_unknown_bars = []
     for the_current_bar in bars_to_node:
         if the_current_bar.is_computed == False:
@@ -37,18 +37,18 @@ def SumOfForcesInLocalX(node, local_x_bar):
     x_sum += node.GetNetYForce()*geom.CosineVectors(local_x_vector, [0,1])
     for Bar in node.bars:
         if Bar.is_computed == True:
-            x_sum +=Bar.axial_load*geom.SineBars(local_x_bar, Bar)
+            x_sum +=Bar.axial_load*geom.CosineBars(local_x_bar, Bar)
     #calculate unknown force
-    other_bar=-1*x_sum
-    local_x_bar.axial_load = other_bar
-    local_x_bar.is_computed == True
+    unknown_force=-1*x_sum
+    local_x_bar.axial_load = unknown_force
+    local_x_bar.is_computed = True
     return
 
 # Compute unknown force in bar due to sum of the 
 # forces in the y direction
 def SumOfForcesInLocalY(node, unknown_bars):
     local_x_bar=unknown_bars[0]
-    other_bar=unknown_bars[2]
+    other_bar=unknown_bars[1]
     local_x_vector = geom.BarNodeToVector(node, local_x_bar)
     y_sum=0
     #sum of external forces
@@ -58,32 +58,31 @@ def SumOfForcesInLocalY(node, unknown_bars):
         if Bar.is_computed == True:
             y_sum +=Bar.axial_load*geom.SineBars(local_x_bar, Bar)
     #calculate unknown force
-    other_bar=-1*y_sum/geom.SineBars(local_x_bar, other_bar)
-    unknown_bars.axial_load = other_bar
-    unknown_bars.is_computed == True
-    return
+    unknown_force=-1*y_sum/geom.SineBars(local_x_bar, other_bar)
+    other_bar.axial_load = unknown_force
+    other_bar.is_computed = True
     return
     
 # Perform the method of joints on the structure
 def IterateUsingMethodOfJoints(nodes,bars):
     count=1
     contwhile = False
-    for Bar in bars:
+    for Bar in bars: 
         if Bar.is_computed == False:
             contwhile = True
             break 
     while contwhile == True: 
         for node in nodes:
-            if NodeIsViable()== True:
-                unknown_bar = UnknownBars(node)
-                if len(unknown_bar)==2:
-                    SumOfForcesInLocalY(unknown_bar)
-                local_x_bar = unknown_bar
-                SumOfForcesInLocalX(local_x_bar)
+            if NodeIsViable(node)== True:
+                unknown_bars = UnknownBars(node)
+                if len(unknown_bars)==2:
+                    SumOfForcesInLocalY(node, unknown_bars)
+                local_x_bar = unknown_bars[0]
+                SumOfForcesInLocalX(node, local_x_bar)
         contwhile = False
         for Bar in bars:
             if Bar.is_computed == False:
-                contwhile=True 
+                contwhile=True
                 break 
         if count <= len(nodes):
             count += 1
