@@ -22,7 +22,7 @@ def UnknownBars(node):
 # Determine if a node if "viable" or not
 def NodeIsViable(node):
     my_unknown_bar=UnknownBars(node)
-    if len(my_unknown_bar)>0 & len(my_unknown_bar)<=2:
+    if len(my_unknown_bar)>0 and len(my_unknown_bar)<=2:
         return True
     else: 
         return False
