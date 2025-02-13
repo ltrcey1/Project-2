@@ -84,5 +84,5 @@ Q82::9.8565
 Q83::N
 Q84::N
 Q85::N
-Q86::
-Q87::
+Q86::The three trusses were each strong enough to withstand external loads without yeilding. While the gabeled Pratt truss and Scissor truss had the same tributary areas, external force due to loads, and cross sectional areas, the maximal magnitude of the scissor truss was almost double that of the gabeled pratt truss. The modified queen truss, though smaller in size, still had less axial forces than the scissor truss and more than the gabeled pratt truss. The scissor truss also had more zer force memebers than the other two, which makes it less stable than the others. 
+Q87::I think that the gabeled pratt truss is the most structurally sound because it has the lowest axial forces despite the same external loading as the scissor truss. 
